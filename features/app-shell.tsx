@@ -7,6 +7,7 @@ import Sidebar from "@/features/navigation/sidebar";
 import Topbar from "@/features/navigation/topbar";
 import { SearchDialog } from "@/features/dialogs/search-dialog";
 import { AddSchoolDialog } from "@/features/dialogs/school-dialogs";
+import { PerformanceDialog } from "@/features/dialogs/performance-dialog";
 import { LoginPage } from "@/features/auth/login-page";
 import { globalStyles } from "@/features/app-styles";
 import { AcademicYearProvider } from "@/features/academic-years/academic-year-context";
@@ -20,6 +21,19 @@ export function AppShell({ children }: { children: ReactNode }) {
   const [collapsed, setCollapsed] = useState(false);
   const [dialog, setDialog] = useState<string | null>(null);
   const [dark, setDark] = useState(false);
+  const [performanceDialog, setPerformanceDialog] = useState<{
+    mode: "add" | "edit";
+    item?: string;
+  } | null>(null);
+
+  useEffect(() => {
+    const handlePerformanceDialog = (event: Event) => {
+      const detail = (event as CustomEvent<{ mode: "add" | "edit"; item?: string }>).detail;
+      setPerformanceDialog(detail);
+    };
+    window.addEventListener("scsms-performance-dialog", handlePerformanceDialog);
+    return () => window.removeEventListener("scsms-performance-dialog", handlePerformanceDialog);
+  }, []);
 
   useEffect(() => {
     setDark(localStorage.getItem("scsms-theme") === "dark");
@@ -90,6 +104,13 @@ export function AppShell({ children }: { children: ReactNode }) {
         )}
         {dialog === "add" && (
           <AddSchoolDialog onClose={() => setDialog(null)} />
+        )}
+        {performanceDialog && (
+          <PerformanceDialog
+            mode={performanceDialog.mode}
+            item={performanceDialog.item}
+            onClose={() => setPerformanceDialog(null)}
+          />
         )}
         <style jsx global>
           {globalStyles}

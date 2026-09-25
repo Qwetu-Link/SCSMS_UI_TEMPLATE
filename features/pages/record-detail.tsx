@@ -301,12 +301,18 @@ export function RecordDetail({
             <Button
               className="edit-record-button"
               onClick={() =>
-                window.dispatchEvent(
-                  new CustomEvent("scsms-edit-record", {
-                    detail: { active, item },
-                  }),
-                )
-              }
+              active === "School Performance"
+                ? window.dispatchEvent(
+                    new CustomEvent("scsms-performance-dialog", {
+                      detail: { mode: "edit", item },
+                    }),
+                  )
+                : window.dispatchEvent(
+                    new CustomEvent("scsms-edit-record", {
+                      detail: { active, item },
+                    }),
+                  )
+            }
             >
               <Pencil data-icon="inline-start" />
               Edit {active === "Reports" ? "Report" : "Record"}

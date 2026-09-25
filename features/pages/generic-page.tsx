@@ -117,6 +117,14 @@ export function GenericPage({
               <Plus data-icon="inline-start" />
               Add Ward Record
             </Button>
+          ) : active === "School Performance" ? (
+            <Button
+              className="edit-school-button"
+              onClick={() => window.dispatchEvent(new CustomEvent("scsms-performance-dialog", { detail: { mode: "add" } }))}
+            >
+              <Plus data-icon="inline-start" />
+              Add Performance
+            </Button>
           ) : (
             <Button>
               <Plus data-icon="inline-start" />
